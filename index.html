@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Help Center</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #243047;
+    }
+    header {
+      background: #2457d6;
+      color: white;
+      text-align: center;
+      padding: 35px 15px;
+    }
+    header h1 { margin: 0 0 10px; }
+    header p { margin: 0; }
+    main {
+      max-width: 750px;
+      margin: 25px auto;
+      padding: 0 16px;
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccd4e0;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+    .faq {
+      background: white;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 2px 7px #0000000c;
+    }
+    .question {
+      font-weight: bold;
+      cursor: pointer;
+      color: #2457d6;
+    }
+    .answer {
+      display: none;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+    .faq.open .answer { display: block; }
+    #empty { text-align: center; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #667085;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FAQ Help Center</h1>
+    <p>Find answers to your questions quickly</p>
+  </header>
+
+  <main>
+    <input id="search" type="search"
+      placeholder="Search your questions...">
+
+    <div id="faqList">
+      <div class="faq">
+        <div class="question">What is this Help Center?</div>
+        <div class="answer">This Help Center provides answers to common questions in one convenient place.</div>
+      </div>
+
+      <div class="faq">
+        <div class="question">How can I find an answer?</div>
+        <div class="answer">Type a keyword in the search box or tap a question to view its answer.</div>
+      </div>
+
+      <div class="faq">
+        <div class="question">How do I contact support?</div>
+        <div class="answer">Contact your organization's support team through its official email or contact page.</div>
+      </div>
+
+      <div class="faq">
+        <div class="question">Can I use this website on my phone?</div>
+        <div class="answer">Yes! This website adjusts to mobile phones, tablets, and computers.</div>
+      </div>
+
+      <div class="faq">
+        <div class="question">Why can't I find my question?</div>
+        <div class="answer">Try different keywords. If you still cannot find an answer, contact the support team.</div>
+      </div>
+
+      <div class="faq">
+        <div class="question">Are the answers updated automatically?</div>
+        <div class="answer">No. The website owner must edit the HTML file to update the questions and answers.</div>
+      </div>
+    </div>
+
+    <p id="empty" hidden>No matching questions found.</p>
+  </main>
+
+  <footer>FAQ Help Center | Helpful answers, all in one place</footer>
+
+  <script>
+    const search = document.getElementById("search");
+    const faqs = document.querySelectorAll(".faq");
+    const empty = document.getElementById("empty");
+
+    faqs.forEach(faq => {
+      faq.querySelector(".question").addEventListener("click", () => {
+        faq.classList.toggle("open");
+      });
+    });
+
+    search.addEventListener("input", () => {
+      const term = search.value.toLowerCase();
+      let count = 0;
+
+      faqs.forEach(faq => {
+        const matches = faq.textContent.toLowerCase().includes(term);
+        faq.hidden = !matches;
+        if (matches) count++;
+      });
+
+      empty.hidden = count !== 0;
+    });
+  </script>
+</body>
+</html>
