@@ -1,1 +1,60 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ Help Center</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#202b42}
+header{background:#2457d6;color:white;text-align:center;padding:35px 15px}
+header h1{margin:0 0 10px}
+main{max-width:700px;margin:25px auto;padding:15px}
+input{width:100%;padding:15px;border:1px solid #ccd3df;border-radius:10px;font-size:16px}
+h2{margin-top:28px}
+.faq{background:white;margin:12px 0;padding:18px;border-radius:10px;box-shadow:0 2px 8px #dce2ee}
+.question{font-size:17px;font-weight:bold;cursor:pointer}
+.answer{display:none;line-height:1.6;color:#555}
+.faq.open .answer{display:block}
+footer{text-align:center;padding:25px;color:#667085}
+</style>
+</head>
+<body>
+<header>
+<h1>FAQ Help Center</h1>
+<p>Find answers to your questions</p>
+</header>
+<main>
+<input id="search" type="search" placeholder="Search questions...">
+<h2>Frequently Asked Questions</h2>
+<div id="faqs">
+<div class="faq"><div class="question">How do I create an account? ▼</div><p class="answer">Select Sign Up and enter the required details to create your account.</p></div>
+<div class="faq"><div class="question">How can I reset my password? ▼</div><p class="answer">Choose Forgot Password on the login page and follow the instructions.</p></div>
+<div class="faq"><div class="question">How do I contact support? ▼</div><p class="answer">Contact the support team through your service's official help channel.</p></div>
+<div class="faq"><div class="question">How do I report a problem? ▼</div><p class="answer">Describe the issue clearly and submit it to the support team.</p></div>
+<div class="faq"><div class="question">Can I update my account details? ▼</div><p class="answer">Open your account settings to review and update available details.</p></div>
+</div>
+<p id="empty" style="display:none">No matching questions found.</p>
+</main>
+<footer>FAQ Help Center | We're here to help</footer>
+<script>
+const cards=document.querySelectorAll('.faq');
+cards.forEach(card=>{
+card.querySelector('.question').addEventListener('click',()=>{
+card.classList.toggle('open');
+});
+});
+document.getElementById('search').addEventListener('input',function(){
+let count=0;
+cards.forEach(card=>{
+const match=card.innerText.toLowerCase().includes(this.value.toLowerCase());
+card.style.display=match?'block':'none';
+if(match)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+});
+</script>
+</body>
+</html>
+
