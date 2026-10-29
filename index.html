@@ -2,134 +2,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ Help Center</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #243047;
-    }
-    header {
-      background: #2457d6;
-      color: white;
-      text-align: center;
-      padding: 35px 15px;
-    }
-    header h1 { margin: 0 0 10px; }
-    header p { margin: 0; }
-    main {
-      max-width: 750px;
-      margin: 25px auto;
-      padding: 0 16px;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ccd4e0;
-      border-radius: 8px;
-      font-size: 16px;
-      margin-bottom: 18px;
-    }
-    .faq {
-      background: white;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      padding: 18px;
-      box-shadow: 0 2px 7px #0000000c;
-    }
-    .question {
-      font-weight: bold;
-      cursor: pointer;
-      color: #2457d6;
-    }
-    .answer {
-      display: none;
-      line-height: 1.6;
-      margin-top: 12px;
-    }
-    .faq.open .answer { display: block; }
-    #empty { text-align: center; }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #667085;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ Help Center</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#243047}
+header{background:#2457d6;color:white;text-align:center;padding:35px 15px}
+header h1{margin:0 0 10px}
+main{max-width:800px;margin:25px auto;padding:0 16px}
+input{width:100%;padding:14px;border:1px solid #ccd4e0;border-radius:8px;font-size:16px;margin-bottom:20px}
+h2{font-size:19px;color:#2457d6;margin-top:25px}
+.faq{background:white;margin-bottom:10px;border-radius:8px;padding:16px;box-shadow:0 2px 7px #0000000c}
+.question{font-weight:bold;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.question:after{content:"+";font-size:20px}
+.faq.open .question:after{content:"−"}
+.answer{display:none;line-height:1.6;margin-top:12px;color:#475467}
+.faq.open .answer{display:block}
+#empty{text-align:center;padding:20px}
+footer{text-align:center;padding:22px;color:#667085}
+</style>
 </head>
 <body>
-  <header>
-    <h1>FAQ Help Center</h1>
-    <p>Find answers to your questions quickly</p>
-  </header>
+<header>
+<h1>FAQ Help Center</h1>
+<p>Find quick answers to your questions</p>
+</header>
+<main>
+<input id="search" type="search" placeholder="Search questions or keywords...">
+<div id="faqList"></div>
+<p id="empty" hidden>No matching questions found. Try another keyword.</p>
+</main>
+<footer>FAQ Help Center | We're here to help</footer>
 
-  <main>
-    <input id="search" type="search"
-      placeholder="Search your questions...">
+<script>
+const groups = {
+"General Questions": [
+["What is the FAQ Help Center?","It is a central place where users can find answers to common questions."],
+["How do I use this website?","Search for a keyword or select any question to read its answer."],
+["Can I use this website on my phone?","Yes. The website is designed to work on phones, tablets and computers."],
+["How do I find a specific answer?","Enter words related to your question in the search box."],
+["Why can't I find my question?","Try different keywords. If you still need help, contact your support team."]
+],
+"Account Issues": [
+["How do I create an account?","Visit the official registration page, enter the requested details and follow the instructions."],
+["I forgot my password. What should I do?","Select 'Forgot Password' on the login page and follow the password reset instructions."],
+["Why can't I log in?","Check your username and password, your internet connection, and whether Caps Lock is enabled."],
+["How do I change my account details?","Sign in and look for Profile, Account Settings or Edit Details."],
+["How do I keep my account secure?","Use a strong, unique password and never share your password or verification codes."]
+],
+"Payments and Billing": [
+["Which payment methods are accepted?","Available methods depend on the service. Check the official payment page for current options."],
+["What should I do if a payment fails?","Check your payment details and bank status. If money was deducted, contact the official support team."],
+["Why was I charged twice?","Check your transaction history first. If two charges appear, contact the provider with your transaction details."],
+["How can I get a refund?","Review the provider's refund policy and submit a request through its official support channel."],
+["Where can I find my receipt?","Check your registered email or the transaction history in your account."]
+],
+"Technical Support": [
+["Why is the website not loading?","Check your internet connection, refresh the page and try again after a short wait."],
+["What should I do if a page is blank?","Refresh the page. If it remains blank, try another browser or clear the browser cache."],
+["Why is the search not working?","Check your spelling and try a shorter keyword. Clear the search box to see all questions."],
+["How do I report a technical problem?","Contact the website support team and explain the problem, what you were doing and any error message."],
+["How can I contact customer support?","Use the official Contact Us page or the support email provided by the service."]
+]
+};
 
-    <div id="faqList">
-      <div class="faq">
-        <div class="question">What is this Help Center?</div>
-        <div class="answer">This Help Center provides answers to common questions in one convenient place.</div>
-      </div>
+const list = document.getElementById("faqList");
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
 
-      <div class="faq">
-        <div class="question">How can I find an answer?</div>
-        <div class="answer">Type a keyword in the search box or tap a question to view its answer.</div>
-      </div>
+function renderFAQs(term = "") {
+  list.innerHTML = "";
+  let count = 0;
 
-      <div class="faq">
-        <div class="question">How do I contact support?</div>
-        <div class="answer">Contact your organization's support team through its official email or contact page.</div>
-      </div>
+  Object.entries(groups).forEach(([group, items]) => {
+    const matches = items.filter(([q,a]) =>
+      (group + " " + q + " " + a).toLowerCase().includes(term.toLowerCase())
+    );
+    if (!matches.length) return;
 
-      <div class="faq">
-        <div class="question">Can I use this website on my phone?</div>
-        <div class="answer">Yes! This website adjusts to mobile phones, tablets, and computers.</div>
-      </div>
+    const heading = document.createElement("h2");
+    heading.textContent = group;
+    list.appendChild(heading);
 
-      <div class="faq">
-        <div class="question">Why can't I find my question?</div>
-        <div class="answer">Try different keywords. If you still cannot find an answer, contact the support team.</div>
-      </div>
+    matches.forEach(([question, answer]) => {
+      count++;
+      const card = document.createElement("div");
+      card.className = "faq";
 
-      <div class="faq">
-        <div class="question">Are the answers updated automatically?</div>
-        <div class="answer">No. The website owner must edit the HTML file to update the questions and answers.</div>
-      </div>
-    </div>
+      const q = document.createElement("div");
+      q.className = "question";
+      q.textContent = question;
 
-    <p id="empty" hidden>No matching questions found.</p>
-  </main>
+      const a = document.createElement("div");
+      a.className = "answer";
+      a.textContent = answer;
 
-  <footer>FAQ Help Center | Helpful answers, all in one place</footer>
-
-  <script>
-    const search = document.getElementById("search");
-    const faqs = document.querySelectorAll(".faq");
-    const empty = document.getElementById("empty");
-
-    faqs.forEach(faq => {
-      faq.querySelector(".question").addEventListener("click", () => {
-        faq.classList.toggle("open");
-      });
+      q.addEventListener("click", () => card.classList.toggle("open"));
+      card.append(q, a);
+      list.appendChild(card);
     });
+  });
 
-    search.addEventListener("input", () => {
-      const term = search.value.toLowerCase();
-      let count = 0;
+  empty.hidden = count !== 0;
+}
 
-      faqs.forEach(faq => {
-        const matches = faq.textContent.toLowerCase().includes(term);
-        faq.hidden = !matches;
-        if (matches) count++;
-      });
-
-      empty.hidden = count !== 0;
-    });
-  </script>
+search.addEventListener("input", () => renderFAQs(search.value));
+renderFAQs();
+</script>
 </body>
 </html>
+
